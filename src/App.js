@@ -6,6 +6,9 @@ import {
 } from 'react-router-dom';
 import './App.css';
 
+const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+const baseUrl='http://steamspy.com/api.php?request=';
+const reqTop100games='top100in2weeks';
 
 var defaultHeader="Top 100 Games on Steam";
 
@@ -70,10 +73,20 @@ class Header extends Component{
 }
 
 class Content extends Component{
+      constructor(props){
+        super(props);
+        this.state={result:[], };
+      }
+      componentDidMount(){
+            fetch(proxyUrl+baseUrl+reqTop100games)
+                .then(response=>response.json())
+                .then(result=>this.setState({result}));
+        }
       render(){
+          const{result}=this.state;
           return(
             <div className="Content">
-                <Route exact path="/" component={MainView}/>
+                <Route exact path="/" render={(props)=>(<MainView result={result} {...props}/>)}/>
                 <Route exact path="/stats" component={ChartView} />
                 <Route exact path="/game/:appid" component={TableView} />
             </div>
@@ -84,9 +97,19 @@ class Content extends Component{
 
 class MainView extends Component{
       render(){
+        const{result}=this.props;
         return(
           <div className="MainView">
               <p>MainView content</p>
+              {
+                  Object.values(result).map(item=>
+                      <div key={item.appid}>
+                      <p>
+                          <span>{item.name} </span>
+                          <Link to={`/game/${item.appid}`}>Details</Link>
+                      </p>
+                      </div>)
+              }
           </div>
         );
       }
