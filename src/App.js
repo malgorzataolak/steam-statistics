@@ -4,6 +4,7 @@ import {
   Route,
   Link
 } from 'react-router-dom';
+import {Bar} from 'react-chartjs-2';
 import './App.css';
 
 const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
@@ -87,7 +88,7 @@ class Content extends Component{
           return(
             <div className="Content">
                 <Route exact path="/" render={(props)=>(<MainView result={result} {...props}/>)}/>
-                <Route exact path="/stats" component={ChartView} />
+                <Route exact path="/stats" render={(props)=>(<ChartView result={result} {...props}/>)} />
                 <Route exact path="/game/:appid" render={(props)=>(<TableView {...props}/>)} />
             </div>
           );
@@ -139,12 +140,50 @@ class TableView extends Component{
 
 class ChartView extends Component{
       render(){
-        return(
-          <div className="ChartView">
-              <p>ChartView content</p>
-          </div>
-        );
-      }
+        const{result}=this.props;
+        var games=[];
+        var players=[];
+
+        Object.values(result).slice(0,10).map(item=>{
+                    games.push(item.name);
+                    players.push(item.players_2weeks);
+                    return this;
+                  })
+                  
+          const data = {
+                  labels: games,
+                  datasets: [
+                    {
+                      label: 'Players',
+                      backgroundColor: 'rgba(255,99,132,0.2)',
+                      borderColor: 'rgba(255,99,132,1)',
+                      borderWidth: 1,
+                      hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+                      hoverBorderColor: 'rgba(255,99,132,1)',
+                      data: players
+                    }
+                  ]
+                };
+          const options = {
+              scales: {
+              xAxes: [{
+                ticks: {
+                    fontSize:10
+                  }
+                }]
+              },
+                  maintainAspectRatio: false
+          };
+          return (
+            <div className="ChartView">
+              <Bar
+                data={data}
+                height={400}
+                options={options}
+              />
+            </div>
+          );
+            }
 
 }
 
