@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom';
 import './App.css';
 
 
@@ -19,11 +23,13 @@ class App extends Component {
   render() {
     const{header, }=this.state;
     return (
-      <div className="App">
-          <Menu changeHeader={this.changeHeader}/>
-          <Header header={header}/>
-          <Content />
-      </div>
+      <Router>
+        <div className="containter">
+            <Menu changeHeader={this.changeHeader}/>
+            <Header header={header}/>
+            <Content />
+        </div>
+      </Router>
     );
   }
 }
@@ -35,8 +41,12 @@ class Menu extends Component{
         <div className="Menu">
             <nav>
                 <ul> 
-                  <li>Top 100 Games</li>
-                  <li>Statistics</li>
+                  <li>
+                    <Link to="/" onClick={()=>changeHeader(defaultHeader)}>TOP 100 Steam Games</Link>
+                  </li>
+                  <li>
+                    <Link to="/stats" onClick={()=>changeHeader("Game statistics")}>Games statistic</Link>
+                  </li>
                 </ul>
             </nav>
         </div>
@@ -63,9 +73,9 @@ class Content extends Component{
       render(){
           return(
             <div className="Content">
-              <MainView />
-              <TableView />
-              <ChartView />
+                <Route exact path="/" component={MainView}/>
+                <Route exact path="/stats" component={ChartView} />
+                <Route exact path="/game/:appid" component={TableView} />
             </div>
           );
       }
