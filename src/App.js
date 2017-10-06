@@ -9,7 +9,7 @@ import './App.css';
 const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 const baseUrl='http://steamspy.com/api.php?request=';
 const reqTop100games='top100in2weeks';
-
+const reqAppDetails='appdetails&appid=';
 var defaultHeader="Top 100 Games on Steam";
 
 class App extends Component {
@@ -88,7 +88,7 @@ class Content extends Component{
             <div className="Content">
                 <Route exact path="/" render={(props)=>(<MainView result={result} {...props}/>)}/>
                 <Route exact path="/stats" component={ChartView} />
-                <Route exact path="/game/:appid" component={TableView} />
+                <Route exact path="/game/:appid" render={(props)=>(<TableView {...props}/>)} />
             </div>
           );
       }
@@ -100,7 +100,6 @@ class MainView extends Component{
         const{result}=this.props;
         return(
           <div className="MainView">
-              <p>MainView content</p>
               {
                   Object.values(result).map(item=>
                       <div key={item.appid}>
@@ -117,10 +116,22 @@ class MainView extends Component{
 }
 
 class TableView extends Component{
+    constructor(props){
+        super(props);
+        this.state={result:[], };
+			}
+		componentDidMount(){
+        fetch(proxyUrl+baseUrl+reqAppDetails+this.props.match.params.appid)
+            .then(response=>response.json())
+            .then(result=>this.setState({result}));
+    }
       render(){
+        const{result,}=this.state;
         return(
           <div className="TableView">
-              <p>TableView content</p>
+              <p>Game: {result.name}</p>
+              <p>Developer: {result.developer}</p>
+              <p>Publisher: {result.publisher}</p>
           </div>
         );
       }
