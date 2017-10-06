@@ -2,15 +2,26 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+
+var defaultHeader="Top 100 Games on Steam";
+
 class App extends Component {
   constructor(props){
     super(props);
+    this.state={header:defaultHeader};
+    this.changeHeader=this.changeHeader.bind(this);
   }
+
+  changeHeader(newHeader){
+      this.setState({header:newHeader});
+  }
+
   render() {
+    const{header, }=this.state;
     return (
       <div className="App">
-          <Menu />
-          <Header />
+          <Menu changeHeader={this.changeHeader}/>
+          <Header header={header}/>
           <Content />
       </div>
     );
@@ -19,6 +30,7 @@ class App extends Component {
 
 class Menu extends Component{
     render(){
+        const{changeHeader}=this.props;
       return(
         <div className="Menu">
             <nav>
@@ -35,10 +47,11 @@ class Menu extends Component{
 
 class Header extends Component{
     render(){
+        const{header}=this.props;
         return(
           <div className="Header">
             <header>
-                <h1>Default header</h1>
+                <h1>{header}</h1>
             </header>
           </div>
         );
