@@ -106,11 +106,11 @@ class MainView extends Component{
         return(
           <div className="MainView">
               {
-                  Object.values(result).map(item=>
-                      <div key={item.appid}>
+                  Object.keys(result).map(keys=>
+                      <div key={result[keys].appid}>
                       <p>
-                          <span>{item.name} </span>
-                          <Link to={`/game/${item.appid}`}>Details</Link>
+                          <span>{result[keys].name} </span>
+                          <Link to={`/game/${result[keys].appid}`}>Details</Link>
                       </p>
                       </div>)
               }
@@ -154,10 +154,9 @@ class ChartView extends Component{
         const{result}=this.props;
         var games=[];
         var players=[];
-
-        Object.values(result).slice(0,10).map(item=>{
-                    games.push(item.name);
-                    players.push(item.players_2weeks);
+        Object.keys(result).slice(0,10).map(key=>{
+                    games.push(result[key].name);
+                    players.push(result[key].players_2weeks);
                     return this;
                   })
                   
