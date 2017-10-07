@@ -82,6 +82,7 @@ class Content extends Component{
       componentDidMount(){
             fetch(proxyUrl+baseUrl+reqTop100games)
                 .then(response=>response.json())
+                .then(result=>Object.values(result).sort((a,b)=>b.players_2weeks-a.players_2weeks))
                 .then(result=>this.setState({result}));
         }
       render(){
@@ -101,20 +102,25 @@ class Content extends Component{
 class MainView extends Component{
 		componentDidMount(){
 			const{changeHeader}=this.props;
-      changeHeader("Top 100 Games");
+      		changeHeader("Top 100 Games");
+
 		}
+
       render(){
         const{result}=this.props;
         return(
           <div className="MainView">
-              {
+          <h2>By players in the last two weeks</h2>
+              {	
                   Object.keys(result).map((keys, iterator)=>
                   		
                       <div key={result[keys].appid}>
                       <p>
                       		<span>{iterator+1} </span>
-                          <span>{result[keys].name} </span>
-                          <Link to={`/game/${result[keys].appid}`}>Details</Link>
+                            <span>{result[keys].name} </span>
+                            <span>{result[keys].players_2weeks} </span>
+                            <span>Price: {(result[keys].price*0.01).toFixed(2)}$ </span>
+                            <Link to={`/game/${result[keys].appid}`}>Details</Link>
                       </p>
                       </div>)
               }
@@ -141,9 +147,19 @@ class TableView extends Component{
         const{result,}=this.state;
         return(
           <div className="TableView">
-              <p>Game: {result.name}</p>
+              <h2>{result.name}</h2>
               <p>Developer: {result.developer}</p>
               <p>Publisher: {result.publisher}</p>
+              <p>Score rank: {result.score_rank}</p>
+              <p>Owners: {result.owners}</p>
+              <p>Players since March 2009: {result.players_forever}</p>
+              <p>Players in the last 2 weeks: {result.players_2weeks}</p>
+              <p>Average playtime since March 2009: {result.average_forever}</p>
+              <p>Average playtime in the last 2 weeks: {result.average_2weeks}</p>
+              <p>Median playtime: {result.median_forever}</p>
+              <p>Median playtime in the last 2 weeks: {result.median_2weeks}</p>
+              <p>CCU (yesterday): {result.ccu}</p>
+              <p>Price: {(result.price*0.01).toFixed(2)}$</p>
           </div>
         );
       }
@@ -152,7 +168,7 @@ class TableView extends Component{
 class ChartView extends Component{
 	componentDidMount(){
 	const{changeHeader}=this.props;
-  changeHeader("Best 10 Games Players Rank");
+  changeHeader("Best 10 Games");
         }
       render(){
         const{result}=this.props;
@@ -168,7 +184,7 @@ class ChartView extends Component{
                   labels: games,
                   datasets: [
                     {
-                      label: 'Players',
+                      label: 'Number of players',
                       backgroundColor: 'rgba(255,99,132,0.2)',
                       borderColor: 'rgba(255,99,132,1)',
                       borderWidth: 1,
@@ -182,7 +198,7 @@ class ChartView extends Component{
               scales: {
               xAxes: [{
                 ticks: {
-                    fontSize:10
+                    fontSize:8
                   }
                 }]
               },
@@ -190,9 +206,10 @@ class ChartView extends Component{
           };
           return (
             <div className="ChartView">
+            <h2>By number of players in the last 2 weeks</h2>
               <Bar
                 data={data}
-                height={400}
+                height={500}
                 options={options}
               />
             </div>
