@@ -11,13 +11,15 @@ const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 const baseUrl='http://steamspy.com/api.php?request=';
 const reqTop100games='top100in2weeks';
 const reqAppDetails='appdetails&appid=';
-var defaultHeader="Top 100 Games on Steam";
 
 class App extends Component {
   constructor(props){
     super(props);
-    this.state={header:defaultHeader};
+    this.state={header:""};
     this.changeHeader=this.changeHeader.bind(this);
+  }
+  componentDidMount(){
+    document.title="Steam Statistics";
   }
 
   changeHeader(newHeader){
@@ -106,9 +108,11 @@ class MainView extends Component{
         return(
           <div className="MainView">
               {
-                  Object.keys(result).map(keys=>
+                  Object.keys(result).map((keys, iterator)=>
+                  		
                       <div key={result[keys].appid}>
                       <p>
+                      		<span>{iterator+1} </span>
                           <span>{result[keys].name} </span>
                           <Link to={`/game/${result[keys].appid}`}>Details</Link>
                       </p>
