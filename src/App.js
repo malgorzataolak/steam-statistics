@@ -29,9 +29,9 @@ class App extends Component {
     return (
       <Router>
         <div className="containter">
-            <Menu changeHeader={this.changeHeader}/>
+            <Menu/>
             <Header header={header}/>
-            <Content />
+            <Content changeHeader={this.changeHeader}/>
         </div>
       </Router>
     );
@@ -40,16 +40,15 @@ class App extends Component {
 
 class Menu extends Component{
     render(){
-        const{changeHeader}=this.props;
       return(
         <div className="Menu">
             <nav>
                 <ul> 
                   <li>
-                    <Link to="/" onClick={()=>changeHeader(defaultHeader)}>TOP 100 Steam Games</Link>
+                    <Link to="/">TOP 100 Steam Games</Link>
                   </li>
                   <li>
-                    <Link to="/stats" onClick={()=>changeHeader("Game statistics")}>Games statistic</Link>
+                    <Link to="/stats">Games statistic</Link>
                   </li>
                 </ul>
             </nav>
@@ -85,11 +84,12 @@ class Content extends Component{
         }
       render(){
           const{result}=this.state;
+          const{changeHeader}=this.props;
           return(
             <div className="Content">
-                <Route exact path="/" render={(props)=>(<MainView result={result} {...props}/>)}/>
-                <Route exact path="/stats" render={(props)=>(<ChartView result={result} {...props}/>)} />
-                <Route exact path="/game/:appid" render={(props)=>(<TableView {...props}/>)} />
+                <Route exact path="/" render={(props)=>(<MainView result={result} changeHeader={changeHeader} {...props}/>)}/>
+                <Route exact path="/stats" render={(props)=>(<ChartView result={result} changeHeader={changeHeader} {...props}/>)} />
+                <Route exact path="/game/:appid" render={(props)=>(<TableView changeHeader={changeHeader} {...props}/>)} />
             </div>
           );
       }
@@ -97,6 +97,10 @@ class Content extends Component{
 }
 
 class MainView extends Component{
+		componentDidMount(){
+			const{changeHeader}=this.props;
+      changeHeader("Top 100 Games");
+		}
       render(){
         const{result}=this.props;
         return(
@@ -121,10 +125,13 @@ class TableView extends Component{
         super(props);
         this.state={result:[], };
 			}
+		
 		componentDidMount(){
         fetch(proxyUrl+baseUrl+reqAppDetails+this.props.match.params.appid)
             .then(response=>response.json())
             .then(result=>this.setState({result}));
+            const{changeHeader}=this.props;
+            changeHeader("Game details");
     }
       render(){
         const{result,}=this.state;
@@ -139,6 +146,10 @@ class TableView extends Component{
 }
 
 class ChartView extends Component{
+	componentDidMount(){
+	const{changeHeader}=this.props;
+  changeHeader("Best 10 Games Players Rank");
+        }
       render(){
         const{result}=this.props;
         var games=[];
