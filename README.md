@@ -1,3 +1,9 @@
+Installation notes
+
+Open steam-statistics directory and run npm install to install and npm start to run project.
+Open localhost:3000 in browser.
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
