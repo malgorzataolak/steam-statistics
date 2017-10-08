@@ -30,10 +30,14 @@ class App extends Component {
     const{header, }=this.state;
     return (
       <Router>
-        <div className="containter">
+        <div className="container">
+          <div className="navbar">
+            <h1 className="nav-header">STEAM STATISTICS</h1>
             <Menu/>
+            </div>
             <Header header={header}/>
             <Content changeHeader={this.changeHeader}/>
+            <footer>Małgorzata Olak, data from SteamSpy</footer>
         </div>
       </Router>
     );
@@ -47,10 +51,10 @@ class Menu extends Component{
             <nav>
                 <ul> 
                   <li>
-                    <Link to="/">TOP 100 Steam Games</Link>
+                    <Link to="/">TOP 100 GAMES</Link>
                   </li>
                   <li>
-                    <Link to="/stats">Games statistic</Link>
+                    <Link to="/stats">STATISTICS</Link>
                   </li>
                 </ul>
             </nav>
@@ -110,17 +114,22 @@ class MainView extends Component{
         const{result}=this.props;
         return(
           <div className="MainView">
-          <h2>By players in the last two weeks</h2>
+          <h2>by players in the last two weeks</h2>
+          <div className="main-title">
+          <p><span className="name">Name </span>
+                          <span className="players">Players </span>
+                          <span className="price">Price </span>
+                      </p>
+          </div>
               {	
                   Object.keys(result).map((keys, iterator)=>
                   		
-                      <div key={result[keys].appid}>
+                      <div className="main-content" key={result[keys].appid}>
                       <p>
-                      		<span>{iterator+1} </span>
-                            <span>{result[keys].name} </span>
-                            <span>{result[keys].players_2weeks} </span>
-                            <span>Price: {(result[keys].price*0.01).toFixed(2)}$ </span>
-                            <Link to={`/game/${result[keys].appid}`}>Details</Link>
+                            <span className="name">{iterator+1}. {result[keys].name} </span>
+                            <span className="players">{result[keys].players_2weeks} </span>
+                            <span className="price">{(result[keys].price*0.01).toFixed(2)}$ </span>
+                            <Link to={`/game/${result[keys].appid}`}>DETAILS</Link>
                       </p>
                       </div>)
               }
@@ -148,18 +157,18 @@ class TableView extends Component{
         return(
           <div className="TableView">
               <h2>{result.name}</h2>
-              <p>Developer: {result.developer}</p>
-              <p>Publisher: {result.publisher}</p>
-              <p>Score rank: {result.score_rank}</p>
-              <p>Owners: {result.owners}</p>
-              <p>Players since March 2009: {result.players_forever}</p>
-              <p>Players in the last 2 weeks: {result.players_2weeks}</p>
-              <p>Average playtime since March 2009: {result.average_forever}</p>
-              <p>Average playtime in the last 2 weeks: {result.average_2weeks}</p>
-              <p>Median playtime: {result.median_forever}</p>
-              <p>Median playtime in the last 2 weeks: {result.median_2weeks}</p>
-              <p>CCU (yesterday): {result.ccu}</p>
-              <p>Price: {(result.price*0.01).toFixed(2)}$</p>
+              <p>Developer: <span>{result.developer}</span></p>
+              <p>Publisher: <span>{result.publisher}</span></p>
+              <p>Score rank: <span>{result.score_rank}</span></p>
+              <p>Owners: <span>{result.owners}</span></p>
+              <p>Players since March 2009: <span>{result.players_forever}</span></p>
+              <p>Players in the last 2 weeks: <span>{result.players_2weeks}</span></p>
+              <p>Average playtime since March 2009: <span>{result.average_forever}</span></p>
+              <p>Average playtime in the last 2 weeks: <span>{result.average_2weeks}</span></p>
+              <p>Median playtime: <span>{result.median_forever}</span></p>
+              <p>Median playtime in the last 2 weeks: <span>{result.median_2weeks}</span></p>
+              <p>CCU (yesterday): <span>{result.ccu}</span></p>
+              <p>Price: <span>{(result.price*0.01).toFixed(2)}$</span></p>
           </div>
         );
       }
@@ -185,11 +194,11 @@ class ChartView extends Component{
                   datasets: [
                     {
                       label: 'Number of players',
-                      backgroundColor: 'rgba(255,99,132,0.2)',
-                      borderColor: 'rgba(255,99,132,1)',
+                      backgroundColor: 'rgba(2,38,54,0.2)',
+                      borderColor: 'rgba(2,38,54,1)',
                       borderWidth: 1,
-                      hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                      hoverBorderColor: 'rgba(255,99,132,1)',
+                      hoverBackgroundColor: 'rgba(2,38,54,0.4)',
+                      hoverBorderColor: 'rgba(2,38,54,1)',
                       data: players
                     }
                   ]
@@ -206,12 +215,14 @@ class ChartView extends Component{
           };
           return (
             <div className="ChartView">
-            <h2>By number of players in the last 2 weeks</h2>
+            <h2>by number of players in the last 2 weeks</h2>
+            <div className="chart">
               <Bar
                 data={data}
                 height={500}
                 options={options}
               />
+              </div>
             </div>
           );
             }
